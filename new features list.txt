@@ -1,0 +1,9 @@
+[x] ideas page or section that is a thread that we can vote on and comment on. include as much valid information about locations listed. Maybe integrate with google or something.
+
+[x] allow beacons to be deleted by the person who created them. (events and ideas included)
+allow beacons to have a picture attached to them. 
+
+allow beacons to have a video attached to them. 
+
+media page that is a grid of all the pictures and videos that have been uploaded. photos and videos stay even after beacon expires. 
+

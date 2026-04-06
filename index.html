@@ -1421,6 +1421,23 @@
       font-weight: 700;
       cursor: pointer;
     }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+    .delete-btn:hover {
+      color: var(--neon-pink);
+      transform: scale(1.1);
+    }
   </style>
 </head>
 
@@ -2112,9 +2129,12 @@
         badgeHTML = '<span class="beacon__badge beacon__badge--wheelsup">🛏️ Bedtime</span>';
       }
 
-      let mapLinkHTML = '';
+      let actionBtnsHTML = '';
       if (beacon.lat && beacon.lng) {
-        mapLinkHTML = `<a href="https://maps.google.com/?q=${beacon.lat},${beacon.lng}" target="_blank" class="beacon__map-btn">🗺️ Map</a>`;
+        actionBtnsHTML += `<a href="https://maps.google.com/?q=${beacon.lat},${beacon.lng}" target="_blank" class="beacon__map-btn">🗺️ Map</a>`;
+      }
+      if (beacon.name === getCurrentName()) {
+        actionBtnsHTML += `<button class="delete-btn" onclick="deleteBeacon('${beacon.id}')" title="Delete Beacon">🗑️</button>`;
       }
 
       div.innerHTML = `
@@ -2122,7 +2142,10 @@
           <span class="beacon__name">${escapeHTML(beacon.name)}</span>
           <span class="beacon__time">${timeAgo}</span>
         </div>
-        <div class="beacon__location">${escapeHTML(beacon.location)} ${mapLinkHTML}</div>
+        <div class="beacon__location">
+          ${escapeHTML(beacon.location)}
+          <div style="display:inline-flex; align-items:center; gap:8px; float:right;">${actionBtnsHTML}</div>
+        </div>
         ${badgeHTML}
       `;
 
@@ -2450,7 +2473,10 @@
       div.innerHTML = `
         <div class="plan-header">
           <span class="plan-title">${escapeHTML(plan.title)}</span>
-          <span class="plan-type-badge plan-type-badge--event">🎯 Event</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="plan-type-badge plan-type-badge--event">🎯 Event</span>
+            ${plan.creator === currentName ? `<button class="delete-btn" onclick="deletePlan('${plan.id}')" title="Delete Plan">🗑️</button>` : ''}
+          </div>
         </div>
         <div class="plan-meta">🕐 ${timeStr}</div>
         ${timerHTML}
@@ -2524,7 +2550,10 @@
       div.innerHTML = `
         <div class="plan-header">
           <span class="plan-title">${escapeHTML(plan.title)}</span>
-          <span class="plan-type-badge plan-type-badge--poll">🗳️ Poll</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="plan-type-badge plan-type-badge--poll">🗳️ Poll</span>
+            ${plan.creator === currentName ? `<button class="delete-btn" onclick="deletePlan('${plan.id}')" title="Delete Plan">🗑️</button>` : ''}
+          </div>
         </div>
         <div class="plan-meta">🕐 Decide by ${timeStr}</div>
         ${timerHTML}
@@ -2813,7 +2842,10 @@
               <div class="idea-creator">Suggested by ${escapeHTML(idea.creator)}</div>
               <div class="idea-title">${escapeHTML(idea.ideaTitle)}</div>
             </div>
-            <div class="idea-meta-date">${getTimeAgo(idea.createdAt)}</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div class="idea-meta-date">${getTimeAgo(idea.createdAt)}</div>
+              ${idea.creator === currentName ? `<button class="delete-btn" onclick="deleteIdea('${idea.id}')" title="Delete Idea">🗑️</button>` : ''}
+            </div>
           </div>
           
           <div class="idea-body">
@@ -2841,6 +2873,23 @@
         ideasFeed.appendChild(div);
       });
     }
+
+    // --- Deletion Handlers ---
+    window.deleteBeacon = function(id) {
+      if (confirm('Delete this beacon?')) {
+        beaconsRef.child(id).remove().then(() => showToast('🗑️ Beacon deleted'));
+      }
+    };
+    window.deletePlan = function(id) {
+      if (confirm('Delete this plan?')) {
+        eventsRef.child(id).remove().then(() => showToast('🗑️ Plan deleted'));
+      }
+    };
+    window.deleteIdea = function(id) {
+      if (confirm('Delete this idea?')) {
+        ideasRef.child(id).remove().then(() => showToast('🗑️ Idea deleted'));
+      }
+    };
 
   </script>
 </body>
