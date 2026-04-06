@@ -997,6 +997,36 @@
     </section>
 
     <!-- ============================================================
+         CHECK IN — Name Entry
+         ============================================================ -->
+    <section class="card" id="checkInCard">
+      <h2 class="card__title">👋 Check In</h2>
+
+      <!-- Saved Name Indicator (shown when name is remembered) -->
+      <div class="saved-name" id="savedNamePill" style="display: none;">
+        <span>
+          <span class="saved-name__label">Checkin as </span>
+          <span class="saved-name__value" id="savedNameDisplay"></span>
+        </span>
+        <button class="saved-name__clear" id="clearNameBtn" aria-label="Change name">✕ Change</button>
+      </div>
+
+      <!-- Name Input (hidden after first use) -->
+      <div class="input-group" id="nameGroup">
+        <label for="nameInput">Your Name</label>
+        <input
+          type="text"
+          id="nameInput"
+          placeholder="e.g. Alex"
+          maxlength="30"
+        >
+        <button type="button" class="btn btn--primary" id="saveNameBtn" style="margin-top: 8px;">
+          ✅ Save Name
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================================================
          ACTIVE PLANS FEED
          ============================================================ -->
     <section class="card">
@@ -1015,28 +1045,7 @@
     <section class="card" id="dropBeaconCard">
       <h2 class="card__title">📍 Drop a Beacon</h2>
 
-      <!-- Saved Name Indicator (shown when name is remembered) -->
-      <div class="saved-name" id="savedNamePill" style="display: none;">
-        <span>
-          <span class="saved-name__label">Checkin as </span>
-          <span class="saved-name__value" id="savedNameDisplay"></span>
-        </span>
-        <button class="saved-name__clear" id="clearNameBtn" aria-label="Change name">✕ Change</button>
-      </div>
-
       <form id="beaconForm" autocomplete="off">
-        <!-- Name Input (hidden after first use) -->
-        <div class="input-group" id="nameGroup">
-          <label for="nameInput">Your Name</label>
-          <input
-            type="text"
-            id="nameInput"
-            placeholder="e.g. Alex"
-            maxlength="30"
-            required
-          >
-        </div>
-
         <!-- Location Input -->
         <div class="input-group">
           <label for="locationInput">Where Are You?</label>
@@ -1192,6 +1201,7 @@
     const savedNamePill   = document.getElementById('savedNamePill');
     const savedNameDisplay = document.getElementById('savedNameDisplay');
     const clearNameBtn    = document.getElementById('clearNameBtn');
+    const saveNameBtn     = document.getElementById('saveNameBtn');
     const statusDot       = document.getElementById('statusDot');
     const statusText      = document.getElementById('statusText');
     const toastEl         = document.getElementById('toast');
@@ -1237,6 +1247,18 @@
       nameGroup.style.display = 'block';
       savedNamePill.style.display = 'none';
       nameInput.focus();
+    });
+
+    /** Save Name button click */
+    saveNameBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      if (!name) {
+        showToast('⚠️ Type your name first!');
+        nameInput.focus();
+        return;
+      }
+      saveName(name);
+      showToast(`👋 Hey ${name}! You're checked in.`);
     });
 
     // Load on startup
