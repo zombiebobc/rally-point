@@ -496,6 +496,26 @@
       border-color: rgba(255, 225, 86, 0.15);
     }
 
+    /* --- GPS Map Link --- */
+    .beacon__map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      color: var(--neon-cyan);
+      font-size: 0.75rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .beacon__map-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
     /* --- Bat Signal Toggle --- */
     .bat-toggle {
       display: flex;
@@ -1209,6 +1229,12 @@
           <span class="bat-toggle__label">🦇 Bat Signal — I need the squad!</span>
         </div>
 
+        <!-- GPS Toggle -->
+        <div class="bat-toggle" id="gpsToggle">
+          <div class="bat-toggle__switch"></div>
+          <span class="bat-toggle__label">🌍 Attach Exact GPS (Opens in Map)</span>
+        </div>
+
         <!-- Drop Beacon Button -->
         <button type="submit" class="btn btn--primary" id="dropBtn">
           <span class="spinner" id="dropSpinner"></span>
@@ -1348,6 +1374,7 @@
     const dropBtnText     = document.getElementById('dropBtnText');
     const dropSpinner     = document.getElementById('dropSpinner');
     const batSignalToggle = document.getElementById('batSignalToggle');
+    const gpsToggle       = document.getElementById('gpsToggle');
     const bedtimeToggle   = document.getElementById('bedtimeToggle');
     const bedtimeLabel    = document.getElementById('bedtimeLabel');
     const bedtimeHint     = document.getElementById('bedtimeHint');
@@ -1459,17 +1486,42 @@
     // =============================================================
     beaconForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      pushBeacon(batSignalOn ? 'batsignal' : 'beacon');
-      // Reset bat signal toggle after dropping
-      batSignalOn = false;
-      batSignalToggle.classList.remove('active');
+
+      const runPush = (coords = null) => {
+        pushBeacon(batSignalOn ? 'batsignal' : 'beacon', coords);
+        
+        // Reset toggles after dropping
+        batSignalOn = false;
+        batSignalToggle.classList.remove('active');
+        gpsOn = false;
+        gpsToggle.classList.remove('active');
+      };
+
+      if (gpsOn) {
+        setLoading(true);
+        dropBtnText.textContent = 'Locating...';
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            runPush({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          },
+          (err) => {
+            console.warn('GPS Error:', err);
+            showToast('⚠️ Could not get GPS. Dropping anyway.');
+            runPush(null);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      } else {
+        runPush(null);
+      }
     });
 
     /**
      * Push a beacon to Firebase.
      * @param {'beacon' | 'batsignal' | 'wheelsup'} type - The beacon type.
+     * @param {Object|null} coords - Optional {lat, lng} coordinates.
      */
-    function pushBeacon(type) {
+    function pushBeacon(type, coords = null) {
       const name = nameInput.value.trim();
       const location = locationInput.value.trim();
 
@@ -1497,6 +1549,11 @@
         timestamp: Date.now(),
         type:      type
       };
+
+      if (coords) {
+        beacon.lat = coords.lat;
+        beacon.lng = coords.lng;
+      }
 
       // Push to Firebase (auto-generates a unique key)
       beaconsRef.push(beacon)
@@ -1542,13 +1599,19 @@
 
 
     // =============================================================
-    // BAT SIGNAL TOGGLE (inside Drop Beacon card)
+    // TOGGLES (inside Drop Beacon card)
     // =============================================================
     let batSignalOn = false;
+    let gpsOn = false;
 
     batSignalToggle.addEventListener('click', () => {
       batSignalOn = !batSignalOn;
       batSignalToggle.classList.toggle('active', batSignalOn);
+    });
+
+    gpsToggle.addEventListener('click', () => {
+      gpsOn = !gpsOn;
+      gpsToggle.classList.toggle('active', gpsOn);
     });
 
 
@@ -1674,12 +1737,17 @@
         badgeHTML = '<span class="beacon__badge beacon__badge--wheelsup">🛏️ Bedtime</span>';
       }
 
+      let mapLinkHTML = '';
+      if (beacon.lat && beacon.lng) {
+        mapLinkHTML = `<a href="https://maps.google.com/?q=${beacon.lat},${beacon.lng}" target="_blank" class="beacon__map-btn">🗺️ Map</a>`;
+      }
+
       div.innerHTML = `
         <div class="beacon__top">
           <span class="beacon__name">${escapeHTML(beacon.name)}</span>
           <span class="beacon__time">${timeAgo}</span>
         </div>
-        <div class="beacon__location">${escapeHTML(beacon.location)}</div>
+        <div class="beacon__location">${escapeHTML(beacon.location)} ${mapLinkHTML}</div>
         ${badgeHTML}
       `;
 
