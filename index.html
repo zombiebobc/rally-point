@@ -496,6 +496,151 @@
       border-color: rgba(255, 225, 86, 0.15);
     }
 
+    /* --- Bat Signal Toggle --- */
+    .bat-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 10px 14px;
+      margin-bottom: var(--space-md);
+      background: var(--bg-input);
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+
+    .bat-toggle:hover {
+      border-color: rgba(255, 45, 149, 0.3);
+    }
+
+    .bat-toggle.active {
+      border-color: var(--neon-magenta);
+      background: rgba(255, 45, 149, 0.06);
+    }
+
+    .bat-toggle__switch {
+      width: 40px;
+      height: 22px;
+      border-radius: 11px;
+      background: var(--border-subtle);
+      position: relative;
+      transition: background var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .bat-toggle__switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all var(--transition-fast);
+    }
+
+    .bat-toggle.active .bat-toggle__switch {
+      background: var(--neon-magenta);
+    }
+
+    .bat-toggle.active .bat-toggle__switch::after {
+      left: 21px;
+      background: #fff;
+    }
+
+    .bat-toggle__label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .bat-toggle.active .bat-toggle__label {
+      color: var(--neon-magenta);
+    }
+
+    /* --- Bedtime Toggle Card --- */
+    .bedtime-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+
+    .bedtime-toggle:hover {
+      border-color: rgba(255, 225, 86, 0.25);
+    }
+
+    .bedtime-toggle.active {
+      border-color: var(--neon-yellow);
+      background: rgba(255, 225, 86, 0.05);
+    }
+
+    .bedtime-toggle__info {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .bedtime-toggle__icon {
+      font-size: 1.3rem;
+    }
+
+    .bedtime-toggle__text {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .bedtime-toggle.active .bedtime-toggle__text {
+      color: var(--neon-yellow);
+    }
+
+    .bedtime-toggle__hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .bedtime-toggle__switch {
+      width: 48px;
+      height: 26px;
+      border-radius: 13px;
+      background: var(--border-subtle);
+      position: relative;
+      transition: background var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .bedtime-toggle__switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all var(--transition-fast);
+    }
+
+    .bedtime-toggle.active .bedtime-toggle__switch {
+      background: var(--neon-yellow);
+    }
+
+    .bedtime-toggle.active .bedtime-toggle__switch::after {
+      left: 25px;
+      background: var(--bg-body);
+    }
+
     /* =============================================================
        TOAST NOTIFICATION
        ============================================================= */
@@ -1058,6 +1203,12 @@
           >
         </div>
 
+        <!-- Bat Signal Toggle -->
+        <div class="bat-toggle" id="batSignalToggle">
+          <div class="bat-toggle__switch"></div>
+          <span class="bat-toggle__label">🦇 Bat Signal — I need the squad!</span>
+        </div>
+
         <!-- Drop Beacon Button -->
         <button type="submit" class="btn btn--primary" id="dropBtn">
           <span class="spinner" id="dropSpinner"></span>
@@ -1067,17 +1218,19 @@
     </section>
 
     <!-- ============================================================
-         QUICK STATUS BUTTONS
+         BEDTIME TOGGLE
          ============================================================ -->
     <section class="card">
-      <h2 class="card__title">⚡ Quick Status</h2>
-      <div class="quick-actions">
-        <button class="btn btn--danger" id="batSignalBtn">
-          🦇 Bat Signal
-        </button>
-        <button class="btn btn--toggle" id="wheelsUpBtn">
-          🛏️ Bedtime
-        </button>
+      <h2 class="card__title">🌙 Status</h2>
+      <div class="bedtime-toggle" id="bedtimeToggle">
+        <div class="bedtime-toggle__info">
+          <span class="bedtime-toggle__icon">🛏️</span>
+          <div>
+            <div class="bedtime-toggle__text" id="bedtimeLabel">Bedtime</div>
+            <div class="bedtime-toggle__hint" id="bedtimeHint">Tap to let the squad know you're crashing</div>
+          </div>
+        </div>
+        <div class="bedtime-toggle__switch"></div>
       </div>
     </section>
 
@@ -1194,8 +1347,10 @@
     const dropBtn         = document.getElementById('dropBtn');
     const dropBtnText     = document.getElementById('dropBtnText');
     const dropSpinner     = document.getElementById('dropSpinner');
-    const batSignalBtn    = document.getElementById('batSignalBtn');
-    const wheelsUpBtn     = document.getElementById('wheelsUpBtn');
+    const batSignalToggle = document.getElementById('batSignalToggle');
+    const bedtimeToggle   = document.getElementById('bedtimeToggle');
+    const bedtimeLabel    = document.getElementById('bedtimeLabel');
+    const bedtimeHint     = document.getElementById('bedtimeHint');
     const beaconFeed      = document.getElementById('beaconFeed');
     const emptyState      = document.getElementById('emptyState');
     const savedNamePill   = document.getElementById('savedNamePill');
@@ -1210,9 +1365,11 @@
     // =============================================================
     // CONSTANTS
     // =============================================================
-    const TWO_HOURS_MS  = 2 * 60 * 60 * 1000;   // Beacon expiry time
-    const EXPIRY_CHECK  = 60 * 1000;              // Check for expired beacons every 60s
-    const STORAGE_KEY   = 'rallypoint_name';       // localStorage key for remembered name
+    const THREE_HOURS_MS = 3 * 60 * 60 * 1000;    // Normal beacon expiry
+    const TEN_HOURS_MS   = 10 * 60 * 60 * 1000;   // Bedtime beacon expiry
+    const EXPIRY_CHECK   = 60 * 1000;              // Check for expired beacons every 60s
+    const STORAGE_KEY    = 'rallypoint_name';       // localStorage key for remembered name
+    const BEDTIME_KEY    = 'rallypoint_bedtime';    // localStorage key for bedtime beacon ID
 
 
     // =============================================================
@@ -1302,7 +1459,10 @@
     // =============================================================
     beaconForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      pushBeacon('beacon');
+      pushBeacon(batSignalOn ? 'batsignal' : 'beacon');
+      // Reset bat signal toggle after dropping
+      batSignalOn = false;
+      batSignalToggle.classList.remove('active');
     });
 
     /**
@@ -1382,32 +1542,66 @@
 
 
     // =============================================================
-    // QUICK STATUS BUTTONS
+    // BAT SIGNAL TOGGLE (inside Drop Beacon card)
     // =============================================================
+    let batSignalOn = false;
 
-    // 🦇 BAT SIGNAL — "Come find me, I'm lost/hungry/in trouble"
-    batSignalBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      if (!name) {
-        showToast('⚠️ Enter your name first!');
-        nameInput.focus();
-        return;
-      }
-      // Use current location if typed, otherwise use default
-      pushBeacon('batsignal');
+    batSignalToggle.addEventListener('click', () => {
+      batSignalOn = !batSignalOn;
+      batSignalToggle.classList.toggle('active', batSignalOn);
     });
 
-    // 🌙 WHEELS UP — "I'm done for the night"
-    wheelsUpBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
+
+    // =============================================================
+    // BEDTIME TOGGLE
+    // =============================================================
+    let bedtimeOn = false;
+    let bedtimeBeaconKey = localStorage.getItem(BEDTIME_KEY) || null;
+
+    // Restore bedtime state on load
+    if (bedtimeBeaconKey) {
+      bedtimeOn = true;
+      bedtimeToggle.classList.add('active');
+      bedtimeLabel.textContent = '💤 Sleeping...';
+      bedtimeHint.textContent = 'Tap to let the squad know you\'re awake';
+    }
+
+    bedtimeToggle.addEventListener('click', () => {
+      const name = getCurrentName();
       if (!name) {
         showToast('⚠️ Enter your name first!');
-        nameInput.focus();
         return;
       }
-      // Toggle visual state
-      wheelsUpBtn.classList.toggle('active');
-      pushBeacon('wheelsup');
+
+      if (!bedtimeOn) {
+        // Going to bed
+        const beacon = {
+          name: name,
+          location: '🛏️ Bedtime',
+          timestamp: Date.now(),
+          type: 'wheelsup'
+        };
+        const newRef = beaconsRef.push(beacon);
+        bedtimeBeaconKey = newRef.key;
+        localStorage.setItem(BEDTIME_KEY, bedtimeBeaconKey);
+        bedtimeOn = true;
+        bedtimeToggle.classList.add('active');
+        bedtimeLabel.textContent = '💤 Sleeping...';
+        bedtimeHint.textContent = 'Tap to let the squad know you\'re awake';
+        showToast('🛏️ Goodnight! Sleep tight, king.');
+      } else {
+        // Waking up — remove the bedtime beacon
+        if (bedtimeBeaconKey) {
+          beaconsRef.child(bedtimeBeaconKey).remove();
+        }
+        localStorage.removeItem(BEDTIME_KEY);
+        bedtimeBeaconKey = null;
+        bedtimeOn = false;
+        bedtimeToggle.classList.remove('active');
+        bedtimeLabel.textContent = 'Bedtime';
+        bedtimeHint.textContent = 'Tap to let the squad know you\'re crashing';
+        showToast('☀️ Good morning! The squad is waiting.');
+      }
     });
 
 
@@ -1422,7 +1616,7 @@
 
     /**
      * Renders the beacon feed from a Firebase snapshot.
-     * Filters out beacons older than 2 hours.
+     * Normal beacons expire at 3 hours. Bedtime beacons expire at 10 hours.
      */
     function renderFeed(snapshot) {
       const now = Date.now();
@@ -1432,9 +1626,10 @@
       snapshot.forEach((child) => {
         const data = child.val();
         const age = now - data.timestamp;
+        const maxAge = data.type === 'wheelsup' ? TEN_HOURS_MS : THREE_HOURS_MS;
 
-        // Only show beacons younger than 2 hours
-        if (age < TWO_HOURS_MS) {
+        // Show beacons within their expiry window
+        if (age < maxAge) {
           beacons.push({ id: child.key, ...data });
         }
       });
