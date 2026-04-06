@@ -1125,6 +1125,302 @@
       margin-bottom: var(--space-xs);
       opacity: 0.5;
     }
+
+    /* =============================================================
+       BOTTOM NAVIGATION
+       ============================================================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-subtle);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-around;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .nav-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: var(--space-md) 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all var(--transition-fast);
+    }
+
+    .nav-btn .nav-icon {
+      font-size: 1.4rem;
+      filter: grayscale(1) opacity(0.5);
+      transition: all var(--transition-fast);
+    }
+
+    .nav-btn.active {
+      color: var(--neon-cyan);
+    }
+
+    .nav-btn.active .nav-icon {
+      filter: grayscale(0) opacity(1);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    /* =============================================================
+       IDEAS BOARD
+       ============================================================= */
+    #ideasBoardPage {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .idea-search-results {
+      margin-top: var(--space-md);
+      background: var(--bg-input);
+      border: 1px solid var(--border-input);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: none;
+    }
+
+    .idea-result-item {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      transition: background var(--transition-fast);
+    }
+
+    .idea-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .idea-result-item:hover {
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .idea-result-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+    }
+
+    .idea-result-info {
+      flex: 1;
+    }
+
+    .idea-result-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .idea-result-address {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    
+    .idea-selected-card {
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      border: 1px solid var(--neon-green);
+      background: rgba(57, 255, 20, 0.05);
+      border-radius: var(--radius-md);
+      display: none;
+      position: relative;
+    }
+    
+    .idea-clear-btn {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Idea Card Styles */
+    .idea-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      margin-bottom: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      position: relative;
+    }
+
+    .idea-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .idea-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .idea-creator {
+      font-size: 0.75rem;
+      color: var(--neon-cyan);
+    }
+    
+    .idea-meta-date {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .idea-body {
+      display: flex;
+      gap: var(--space-md);
+      background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-sm);
+      padding: var(--space-sm);
+      margin: var(--space-xs) 0;
+    }
+
+    .idea-photo {
+      width: 70px;
+      height: 70px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: #222;
+      flex-shrink: 0;
+    }
+
+    .idea-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .idea-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .idea-rating {
+      font-size: 0.75rem;
+      color: var(--neon-yellow);
+      font-weight: 600;
+    }
+
+    .idea-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .vote-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+    }
+
+    .vote-btn--up:hover, .vote-btn--up.active {
+      border-color: var(--neon-green);
+      color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.1);
+    }
+
+    .vote-btn--down:hover, .vote-btn--down.active {
+      border-color: var(--neon-magenta);
+      color: var(--neon-magenta);
+      background: rgba(255, 45, 149, 0.1);
+    }
+    
+    .idea-score {
+      font-weight: 900;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      min-width: 30px;
+      text-align: center;
+    }
+    
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .comment-item {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: rgba(0,0,0,0.2);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+    }
+    
+    .comment-item strong {
+      color: var(--text-primary);
+    }
+
+    .comment-input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .comment-input-row input {
+      flex: 1;
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .comment-input-row input:focus {
+      border-color: var(--neon-purple);
+    }
+
+    .comment-input-row button {
+      background: var(--neon-purple);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 0 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -1148,9 +1444,11 @@
       <span id="statusText">Connecting...</span>
     </div>
 
-    <!-- ============================================================
-         LIVE BEACON FEED
-         ============================================================ -->
+    <!-- MAIN PAGES WRAPPER -->
+    <div id="liveFeedPage">
+      <!-- ============================================================
+           LIVE BEACON FEED
+           ============================================================ -->
     <section class="card">
       <h2 class="card__title">📡 Live Feed</h2>
       <div id="beaconFeed">
@@ -1327,7 +1625,79 @@
     <footer class="footer">
       Rally Point • Vegas '26 • What happens here, stays here 🎲
     </footer>
-  </div>
+    
+    </div> <!-- END #liveFeedPage -->
+
+    <!-- ============================================================
+         IDEAS BOARD PAGE
+         ============================================================ -->
+    <div id="ideasBoardPage" style="display: none;">
+      
+      <!-- SUBMIT IDEA FORM -->
+      <section class="card">
+        <h2 class="card__title">💡 Propose an Idea</h2>
+        
+        <div class="input-group">
+          <label>Search Location</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="ideaSearchInput" placeholder="e.g. Top Golf, O'Sheas..." autocomplete="off">
+            <button class="btn btn--secondary" id="ideaSearchBtn" style="width: auto;">🔍</button>
+          </div>
+        </div>
+
+        <!-- MOCK SEARCH RESULTS -->
+        <div class="idea-search-results" id="ideaSearchResults">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- SELECTED LOCATION PREVIEW -->
+        <div class="idea-selected-card" id="ideaSelectedCard">
+          <button class="idea-clear-btn" id="ideaClearBtn">✕</button>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <img id="ideaSelectedImg" src="" alt="Location">
+            <div>
+              <div class="idea-result-name" id="ideaSelectedName">Name</div>
+              <div class="idea-result-address" id="ideaSelectedAddress">Address</div>
+              <div class="idea-rating" id="ideaSelectedRating">⭐ 4.5</div>
+            </div>
+          </div>
+          
+          <div class="input-group" style="margin-top: 16px; margin-bottom: 0;">
+            <label>Why here?</label>
+            <input type="text" id="ideaCustomTitle" placeholder="e.g. Let's do drinks on Saturday">
+          </div>
+          <button class="btn btn--primary" id="submitIdeaBtn" style="margin-top: 16px;">💡 Add to Board</button>
+        </div>
+      </section>
+
+      <!-- IDEAS FEED -->
+      <section class="card" style="border: none; background: transparent; padding: 0;">
+        <h2 class="card__title" style="padding-left: 8px;">🔥 Top Rated</h2>
+        <div id="ideasFeed">
+          <div class="plans-empty" id="ideasEmpty">
+            <span class="plans-empty-icon">💭</span>
+            No ideas yet. Brainstorm time!
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- END #ideasBoardPage -->
+
+  </div> <!-- END .app-container -->
+
+  <!-- ============================================================
+       BOTTOM NAV
+       ============================================================ -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="navLiveFeed">
+      <span class="nav-icon">📡</span>
+      <span>Live Squad</span>
+    </button>
+    <button class="nav-btn" id="navIdeasBoard">
+      <span class="nav-icon">💡</span>
+      <span>Ideas</span>
+    </button>
+  </nav>
 
   <!-- ============================================================
        TOAST NOTIFICATION
@@ -1340,6 +1710,11 @@
        ============================================================ -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <!-- ============================================================
+       GOOGLE MAPS API
+       ============================================================ -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3FSyqs0wuGxYqo-p5Rxk7a06pKE9sy0w&libraries=places"></script>
 
   <script>
     // =============================================================
@@ -2196,6 +2571,277 @@
     setInterval(() => {
       eventsRef.once('value').then(renderPlans);
     }, 30000);
+
+    // =============================================================
+    // NAVIGATION LOGIC
+    // =============================================================
+    const navLiveFeed = document.getElementById('navLiveFeed');
+    const navIdeasBoard = document.getElementById('navIdeasBoard');
+    const liveFeedPage = document.getElementById('liveFeedPage');
+    const ideasBoardPage = document.getElementById('ideasBoardPage');
+
+    navLiveFeed.addEventListener('click', () => {
+      navLiveFeed.classList.add('active');
+      navIdeasBoard.classList.remove('active');
+      liveFeedPage.style.display = 'block';
+      ideasBoardPage.style.display = 'none';
+      window.scrollTo(0,0);
+    });
+
+    navIdeasBoard.addEventListener('click', () => {
+      navIdeasBoard.classList.add('active');
+      navLiveFeed.classList.remove('active');
+      ideasBoardPage.style.display = 'block';
+      liveFeedPage.style.display = 'none';
+      window.scrollTo(0,0);
+    });
+
+    // =============================================================
+    // IDEAS BOARD LOGIC
+    // =============================================================
+    const ideasRef = db.ref('ideas');
+
+    // DOM Elements
+    const ideaSearchInput = document.getElementById('ideaSearchInput');
+    const ideaSearchBtn = document.getElementById('ideaSearchBtn');
+    const ideaSearchResults = document.getElementById('ideaSearchResults');
+    const ideaSelectedCard = document.getElementById('ideaSelectedCard');
+    const ideaClearBtn = document.getElementById('ideaClearBtn');
+    const ideaSelectedImg = document.getElementById('ideaSelectedImg');
+    const ideaSelectedName = document.getElementById('ideaSelectedName');
+    const ideaSelectedAddress = document.getElementById('ideaSelectedAddress');
+    const ideaSelectedRating = document.getElementById('ideaSelectedRating');
+    const ideaCustomTitle = document.getElementById('ideaCustomTitle');
+    const submitIdeaBtn = document.getElementById('submitIdeaBtn');
+    const ideasFeed = document.getElementById('ideasFeed');
+    const ideasEmpty = document.getElementById('ideasEmpty');
+
+    let currentSelectedIdea = null;
+
+    // --- Google Places API Data ---
+    const placesDummyDiv = document.createElement('div');
+    const placesService = new google.maps.places.PlacesService(placesDummyDiv);
+
+    ideaSearchBtn.addEventListener('click', () => {
+      const q = ideaSearchInput.value.trim();
+      if (!q) return;
+
+      const request = {
+        query: q
+      };
+
+      ideaSearchBtn.disabled = true;
+      ideaSearchBtn.textContent = '...';
+
+      placesService.textSearch(request, (results, status) => {
+        ideaSearchBtn.disabled = false;
+        ideaSearchBtn.textContent = '🔍';
+        ideaSearchResults.innerHTML = '';
+        
+        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+          results.slice(0, 5).forEach(res => {
+            const div = document.createElement('div');
+            div.className = 'idea-result-item';
+            
+            const photoUrl = (res.photos && res.photos.length > 0) 
+              ? res.photos[0].getUrl({maxWidth: 200, maxHeight: 200}) 
+              : 'https://images.unsplash.com/photo-1605810230434-7631ac92ab2a?auto=format&fit=crop&w=150&q=80';
+            
+            const ratingStr = res.rating ? `⭐ ${res.rating}` : 'No rating';
+            const address = res.formatted_address || 'Las Vegas, NV';
+
+            div.innerHTML = `
+              <img src="${photoUrl}" alt="${res.name}">
+              <div class="idea-result-info">
+                <div class="idea-result-name">${escapeHTML(res.name)}</div>
+                <div class="idea-result-address">${escapeHTML(address)}</div>
+              </div>
+            `;
+            
+            const placeParams = {
+              id: res.place_id,
+              name: res.name,
+              address: address,
+              rating: ratingStr,
+              photo: photoUrl
+            };
+            
+            div.addEventListener('click', () => selectIdea(placeParams));
+            ideaSearchResults.appendChild(div);
+          });
+          ideaSearchResults.style.display = 'block';
+        } else {
+          showToast('⚠️ No locations found.');
+        }
+      });
+    });
+
+    function selectIdea(place) {
+      currentSelectedIdea = place;
+      ideaSearchResults.style.display = 'none';
+      ideaSearchInput.value = '';
+      
+      ideaSelectedImg.src = place.photo;
+      ideaSelectedName.textContent = place.name;
+      ideaSelectedAddress.textContent = place.address;
+      ideaSelectedRating.textContent = place.rating;
+      
+      ideaSelectedCard.style.display = 'block';
+    }
+
+    ideaClearBtn.addEventListener('click', () => {
+      currentSelectedIdea = null;
+      ideaSelectedCard.style.display = 'none';
+      ideaCustomTitle.value = '';
+    });
+
+    submitIdeaBtn.addEventListener('click', () => {
+      const name = getCurrentName();
+      if (!name) {
+        showToast('⚠️ Enter your name in Live Squad Check-In first!');
+        // switch tab
+        navLiveFeed.click();
+        return;
+      }
+
+      if (!currentSelectedIdea) return;
+
+      const customTitle = ideaCustomTitle.value.trim();
+      
+      ideasRef.push({
+        creator: name,
+        ideaTitle: customTitle || currentSelectedIdea.name,
+        locationName: currentSelectedIdea.name,
+        locationAddress: currentSelectedIdea.address,
+        locationRating: currentSelectedIdea.rating,
+        photoUrl: currentSelectedIdea.photo,
+        mapQuery: encodeURIComponent(currentSelectedIdea.name + ' ' + currentSelectedIdea.address),
+        createdAt: Date.now(),
+        votes: {}, // populated dynamically
+        comments: {}
+      }).then(() => {
+        showToast('💡 Idea added to the board!');
+        ideaClearBtn.click();
+      }).catch(err => {
+        showToast('❌ Failed to add idea');
+      });
+    });
+
+    // --- Render Ideas Feed ---
+    ideasRef.on('value', snapshot => {
+      renderIdeas(snapshot);
+    });
+
+    // Expose these globally for inline onclick
+    window.voteIdea = function(ideaId, val) {
+      const name = getCurrentName();
+      if (!name) { showToast('⚠️ Check-In first!'); return; }
+      
+      const voteRef = ideasRef.child(ideaId).child('votes').child(name);
+      voteRef.once('value', snap => {
+        if (snap.val() === val) {
+          voteRef.remove(); // Un-vote if clicking same button
+        } else {
+          voteRef.set(val);
+        }
+      });
+    };
+
+    window.addIdeaComment = function(ideaId) {
+      const name = getCurrentName();
+      if (!name) { showToast('⚠️ Check-In first!'); return; }
+      
+      const input = document.getElementById('comment-input-' + ideaId);
+      const text = input.value.trim();
+      if (!text) return;
+
+      ideasRef.child(ideaId).child('comments').push({
+        user: name,
+        text: text,
+        timestamp: Date.now()
+      }).then(() => {
+        input.value = '';
+      });
+    };
+
+    function renderIdeas(snapshot) {
+      const ideas = [];
+      const currentName = getCurrentName();
+
+      snapshot.forEach(child => {
+        ideas.push({ id: child.key, ...child.val() });
+      });
+
+      // Calculate score and sort
+      ideas.forEach(idea => {
+        let score = 0;
+        if (idea.votes) {
+          Object.values(idea.votes).forEach(v => score += v);
+        }
+        idea._score = score;
+      });
+      ideas.sort((a, b) => b._score - a._score);
+
+      ideasFeed.querySelectorAll('.idea-item').forEach(el => el.remove());
+
+      if (ideas.length === 0) {
+        ideasEmpty.style.display = 'block';
+        return;
+      }
+      ideasEmpty.style.display = 'none';
+
+      ideas.forEach(idea => {
+        const div = document.createElement('div');
+        div.className = 'idea-item';
+        
+        let myVote = idea.votes ? idea.votes[currentName] : 0;
+        
+        let commentsHTML = '';
+        if (idea.comments) {
+          const sortedComments = Object.values(idea.comments).sort((a,b) => a.timestamp - b.timestamp);
+          commentsHTML = `<div class="comment-list">` + 
+            sortedComments.map(c => `
+              <div class="comment-item"><strong>${escapeHTML(c.user)}:</strong> ${escapeHTML(c.text)}</div>
+            `).join('') + `</div>`;
+        }
+
+        const mapBtnHTML = `<a href="https://maps.google.com/?q=${idea.mapQuery}" target="_blank" class="beacon__map-btn" style="margin-left:0;">🗺️ Google Maps</a>`;
+
+        div.innerHTML = `
+          <div class="idea-header">
+            <div>
+              <div class="idea-creator">Suggested by ${escapeHTML(idea.creator)}</div>
+              <div class="idea-title">${escapeHTML(idea.ideaTitle)}</div>
+            </div>
+            <div class="idea-meta-date">${getTimeAgo(idea.createdAt)}</div>
+          </div>
+          
+          <div class="idea-body">
+            <img src="${idea.photoUrl}" class="idea-photo" alt="Location">
+            <div class="idea-details">
+              <div class="idea-description"><strong>${escapeHTML(idea.locationName)}</strong><br>${escapeHTML(idea.locationAddress)}</div>
+              <div class="idea-rating">${idea.locationRating}</div>
+              <div>${mapBtnHTML}</div>
+            </div>
+          </div>
+
+          <div class="idea-actions">
+            <button class="vote-btn vote-btn--up ${myVote === 1 ? 'active' : ''}" onclick="window.voteIdea('${idea.id}', 1)">👍</button>
+            <div class="idea-score">${idea._score > 0 ? '+' : ''}${idea._score}</div>
+            <button class="vote-btn vote-btn--down ${myVote === -1 ? 'active' : ''}" onclick="window.voteIdea('${idea.id}', -1)">👎</button>
+          </div>
+
+          ${commentsHTML}
+          
+          <div class="comment-input-row" style="margin-top:auto;">
+            <input type="text" id="comment-input-${idea.id}" placeholder="Add a comment..." onkeypress="if(event.key === 'Enter') window.addIdeaComment('${idea.id}')">
+            <button onclick="window.addIdeaComment('${idea.id}')">Send</button>
+          </div>
+        `;
+        ideasFeed.appendChild(div);
+      });
+    }
+
   </script>
 </body>
 </html>
