@@ -1031,7 +1031,7 @@
           <input
             type="text"
             id="nameInput"
-            placeholder="e.g. Bobby"
+            placeholder="e.g. Alex"
             maxlength="30"
             required
           >
@@ -1067,7 +1067,7 @@
           🦇 Bat Signal
         </button>
         <button class="btn btn--toggle" id="wheelsUpBtn">
-          🌙 Wheels Up
+          🛏️ Bedtime
         </button>
       </div>
     </section>
@@ -1329,7 +1329,7 @@
           const messages = {
             beacon:    '📍 Beacon dropped! The squad can find you.',
             batsignal: '🦇 BAT SIGNAL sent! Help is on the way.',
-            wheelsup:  '🌙 Wheels Up! Sleep tight, king.'
+            wheelsup:  '🛏️ Bedtime! Sleep tight, king.'
           };
           showToast(messages[type] || '✅ Done!');
         })
@@ -1346,7 +1346,7 @@
     function getStatusLocation(type) {
       switch (type) {
         case 'batsignal': return '🦇 Needs the squad ASAP!';
-        case 'wheelsup':  return '🌙 Done for the night';
+        case 'wheelsup':  return '🛏️ Bedtime';
         default:          return '';
       }
     }
@@ -1454,7 +1454,7 @@
       if (beacon.type === 'batsignal') {
         badgeHTML = '<span class="beacon__badge beacon__badge--batsignal">🦇 BAT SIGNAL</span>';
       } else if (beacon.type === 'wheelsup') {
-        badgeHTML = '<span class="beacon__badge beacon__badge--wheelsup">🌙 Wheels Up</span>';
+        badgeHTML = '<span class="beacon__badge beacon__badge--wheelsup">🛏️ Bedtime</span>';
       }
 
       div.innerHTML = `
