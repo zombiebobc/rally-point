@@ -2129,22 +2129,26 @@
         badgeHTML = '<span class="beacon__badge beacon__badge--wheelsup">🛏️ Bedtime</span>';
       }
 
-      let actionBtnsHTML = '';
+      let mapLinkHTML = '';
       if (beacon.lat && beacon.lng) {
-        actionBtnsHTML += `<a href="https://maps.google.com/?q=${beacon.lat},${beacon.lng}" target="_blank" class="beacon__map-btn">🗺️ Map</a>`;
+        mapLinkHTML = `<a href="https://maps.google.com/?q=${beacon.lat},${beacon.lng}" target="_blank" class="beacon__map-btn">🗺️ Map</a>`;
       }
+      let deleteBtnHTML = '';
       if (beacon.name === getCurrentName()) {
-        actionBtnsHTML += `<button class="delete-btn" onclick="deleteBeacon('${beacon.id}')" title="Delete Beacon">🗑️</button>`;
+        deleteBtnHTML = `<button class="delete-btn" onclick="deleteBeacon('${beacon.id}')" title="Delete Beacon">🗑️</button>`;
       }
 
       div.innerHTML = `
         <div class="beacon__top">
           <span class="beacon__name">${escapeHTML(beacon.name)}</span>
-          <span class="beacon__time">${timeAgo}</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="beacon__time">${timeAgo}</span>
+            ${deleteBtnHTML}
+          </div>
         </div>
         <div class="beacon__location">
           ${escapeHTML(beacon.location)}
-          <div style="display:inline-flex; align-items:center; gap:8px; float:right;">${actionBtnsHTML}</div>
+          ${mapLinkHTML ? `<div style="display:inline-flex; align-items:center; gap:8px; float:right;">${mapLinkHTML}</div>` : ''}
         </div>
         ${badgeHTML}
       `;
