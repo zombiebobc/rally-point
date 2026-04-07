@@ -280,7 +280,7 @@
       transform: none;
     }
 
-    /* --- Bat Signal --- */
+    /* --- Highlight --- */
     .btn--danger {
       background: linear-gradient(135deg, var(--neon-magenta), #d4004c);
       color: #fff;
@@ -485,7 +485,7 @@
       50%      { opacity: 0.6; }
     }
 
-    /* --- Bat Signal Beacon Glow --- */
+    /* --- Highlight Beacon Glow --- */
     .beacon--batsignal {
       border-color: rgba(255, 45, 149, 0.3);
       box-shadow: 0 0 15px rgba(255, 45, 149, 0.08);
@@ -516,7 +516,7 @@
       color: #fff;
     }
 
-    /* --- Bat Signal Toggle --- */
+    /* --- Highlight Toggle --- */
     .bat-toggle {
       display: flex;
       align-items: center;
@@ -1323,6 +1323,17 @@
       line-height: 1.4;
     }
 
+    .idea-description a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .idea-description a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+
     .idea-rating {
       font-size: 0.75rem;
       color: var(--neon-yellow);
@@ -1538,10 +1549,10 @@
           >
         </div>
 
-        <!-- Bat Signal Toggle -->
+        <!-- Highlight Toggle -->
         <div class="bat-toggle" id="batSignalToggle">
           <div class="bat-toggle__switch"></div>
-          <span class="bat-toggle__label">🦇 Bat Signal — I need the squad!</span>
+          <span class="bat-toggle__label">✨ Highlight — Highlight my post on the feed</span>
         </div>
 
         <!-- GPS Toggle -->
@@ -1959,7 +1970,7 @@
           // Show confirmation
           const messages = {
             beacon:    '📍 Beacon dropped! The squad can find you.',
-            batsignal: '🦇 BAT SIGNAL sent! Help is on the way.',
+            batsignal: '✨ Beacon highlighted!',
             wheelsup:  '🛏️ Bedtime! Sleep tight, king.'
           };
           showToast(messages[type] || '✅ Done!');
@@ -1976,7 +1987,7 @@
     /** Returns a default location string for special status types */
     function getStatusLocation(type) {
       switch (type) {
-        case 'batsignal': return '🦇 Needs the squad ASAP!';
+        case 'batsignal': return '✨ Highlighted! Come through.';
         case 'wheelsup':  return '🛏️ Bedtime';
         default:          return '';
       }
@@ -2124,7 +2135,7 @@
 
       let badgeHTML = '';
       if (beacon.type === 'batsignal') {
-        badgeHTML = '<span class="beacon__badge beacon__badge--batsignal">🦇 BAT SIGNAL</span>';
+        badgeHTML = '<span class="beacon__badge beacon__badge--batsignal">✨ HIGHLIGHT</span>';
       } else if (beacon.type === 'wheelsup') {
         badgeHTML = '<span class="beacon__badge beacon__badge--wheelsup">🛏️ Bedtime</span>';
       }
@@ -2699,7 +2710,20 @@
               photo: photoUrl
             };
             
-            div.addEventListener('click', () => selectIdea(placeParams));
+            div.addEventListener('click', () => {
+              // Fetch extra details (like website) when selecting
+              const detailsRequest = {
+                placeId: res.place_id,
+                fields: ['website', 'url']
+              };
+              placesService.getDetails(detailsRequest, (details, status) => {
+                const finalParams = { ...placeParams };
+                if (status === google.maps.places.PlacesServiceStatus.OK && details) {
+                  finalParams.website = details.website || details.url; // Fallback to Google Maps URL
+                }
+                selectIdea(finalParams);
+              });
+            });
             ideaSearchResults.appendChild(div);
           });
           ideaSearchResults.style.display = 'block';
@@ -2747,6 +2771,7 @@
         locationName: currentSelectedIdea.name,
         locationAddress: currentSelectedIdea.address,
         locationRating: currentSelectedIdea.rating,
+        locationWebsite: currentSelectedIdea.website || '',
         photoUrl: currentSelectedIdea.photo,
         mapQuery: encodeURIComponent(currentSelectedIdea.name + ' ' + currentSelectedIdea.address),
         createdAt: Date.now(),
@@ -2855,7 +2880,12 @@
           <div class="idea-body">
             <img src="${idea.photoUrl}" class="idea-photo" alt="Location">
             <div class="idea-details">
-              <div class="idea-description"><strong>${escapeHTML(idea.locationName)}</strong><br>${escapeHTML(idea.locationAddress)}</div>
+              <div class="idea-description">
+                ${idea.locationWebsite 
+                  ? `<a href="${idea.locationWebsite}" target="_blank"><strong>${escapeHTML(idea.locationName)}</strong></a>` 
+                  : `<strong>${escapeHTML(idea.locationName)}</strong>`}
+                <br>${escapeHTML(idea.locationAddress)}
+              </div>
               <div class="idea-rating">${idea.locationRating}</div>
               <div>${mapBtnHTML}</div>
             </div>
