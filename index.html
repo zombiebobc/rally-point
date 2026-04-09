@@ -3154,7 +3154,7 @@
         const canDelete = contact.addedBy === currentName || contact.name === currentName;
         
         const deleteBtnHTML = canDelete
-          ? `<button class="delete-btn" onclick="deleteContact('${contact.id}')" title="Delete Contact">🗑️</button>`
+          ? `<button class="delete-btn" title="Delete Contact">🗑️</button>`
           : '';
 
         div.innerHTML = `
@@ -3170,15 +3170,27 @@
             <a href="sms:${cleanPhone}" class="contact-btn contact-btn--text" title="Text">💬 Text</a>
           </div>
         `;
+
+        if (canDelete) {
+          const deleteBtn = div.querySelector('.delete-btn');
+          deleteBtn.addEventListener('click', () => {
+            if (confirm('Remove this contact?')) {
+              contactsRef.child(contact.id).remove()
+                .then(() => showToast('🗑️ Contact removed'))
+                .catch(err => {
+                  console.error("Delete error:", err);
+                  showToast('❌ Failed to delete: ' + err.message);
+                });
+            }
+          });
+        }
+
         contactsFeed.appendChild(div);
       });
     }
 
-    window.deleteContact = function(id) {
-      if (confirm('Remove this contact?')) {
-        contactsRef.child(id).remove().then(() => showToast('🗑️ Contact removed'));
-      }
-    };
+    // Removing the global deleteContact function since we use listeners now
+    // window.deleteContact = ...
 
   </script>
 </body>
