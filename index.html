@@ -3075,7 +3075,18 @@
     const contactsEmpty = document.getElementById('contactsEmpty');
 
     function sanitizePhone(phone) {
+      if (!phone) return '';
       return phone.replace(/\D/g, '');
+    }
+
+    function formatPhoneNumber(phoneStr) {
+      if (!phoneStr) return '';
+      const cleaned = ('' + phoneStr).replace(/\D/g, '');
+      const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+      if (match) {
+        return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+      }
+      return phoneStr;
     }
 
     contactForm.addEventListener('submit', (e) => {
@@ -3139,6 +3150,7 @@
         div.style.animationDelay = `${index * 60}ms`;
 
         const cleanPhone = sanitizePhone(contact.phone);
+        const formattedPhone = formatPhoneNumber(contact.phone);
         const canDelete = contact.addedBy === currentName || contact.name === currentName;
         
         const deleteBtnHTML = canDelete
@@ -3149,7 +3161,7 @@
           <div class="contact-item-header">
             <div>
               <div class="contact-name">${escapeHTML(contact.name)}</div>
-              <div class="contact-number">${escapeHTML(contact.phone)}</div>
+              <div class="contact-number">${escapeHTML(formattedPhone)}</div>
             </div>
             ${deleteBtnHTML}
           </div>
