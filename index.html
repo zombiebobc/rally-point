@@ -1449,6 +1449,90 @@
       color: var(--neon-pink);
       transform: scale(1.1);
     }
+
+    /* =============================================================
+       CONTACTS PAGE
+       ============================================================= */
+    .contact-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      margin-bottom: var(--space-sm);
+      animation: beaconSlideIn 0.4s var(--transition-slow) both;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .contact-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contact-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .contact-number {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .contact-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+      margin-top: var(--space-xs);
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .contact-btn--call {
+      background: rgba(57, 255, 20, 0.08);
+      border: 1px solid rgba(57, 255, 20, 0.2);
+      color: var(--neon-green);
+    }
+
+    .contact-btn--call:hover {
+      background: rgba(57, 255, 20, 0.15);
+      border-color: var(--neon-green);
+      transform: translateY(-1px);
+    }
+
+    .contact-btn--text {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      color: var(--neon-cyan);
+    }
+
+    .contact-btn--text:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--neon-cyan);
+      transform: translateY(-1px);
+    }
+
+    .contacts-empty {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 
@@ -1711,6 +1795,42 @@
 
     </div> <!-- END #ideasBoardPage -->
 
+    <!-- ============================================================
+         CONTACTS PAGE
+         ============================================================ -->
+    <div id="contactsPage" style="display: none;">
+      
+      <!-- ADD CONTACT FORM -->
+      <section class="card">
+        <h2 class="card__title">📇 Add Contact</h2>
+        <form id="contactForm" autocomplete="off">
+          <div class="input-group">
+            <label for="contactNameInput">Name</label>
+            <input type="text" id="contactNameInput" placeholder="e.g. Alex" maxlength="30" required>
+          </div>
+          <div class="input-group">
+            <label for="contactPhoneInput">Phone Number</label>
+            <input type="tel" id="contactPhoneInput" placeholder="e.g. (555) 123-4567" required>
+          </div>
+          <button type="submit" class="btn btn--primary" id="addContactBtn">
+            📇 Add to Contacts
+          </button>
+        </form>
+      </section>
+
+      <!-- CONTACTS LIST -->
+      <section class="card" style="border: none; background: transparent; padding: 0;">
+        <h2 class="card__title" style="padding-left: 8px;">👥 The Squad</h2>
+        <div id="contactsFeed">
+          <div class="contacts-empty" id="contactsEmpty">
+            <span class="plans-empty-icon" style="font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.5;">📱</span>
+            No contacts yet. Add yourself!
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- END #contactsPage -->
+
   </div> <!-- END .app-container -->
 
   <!-- ============================================================
@@ -1724,6 +1844,10 @@
     <button class="nav-btn" id="navIdeasBoard">
       <span class="nav-icon">💡</span>
       <span>Ideas</span>
+    </button>
+    <button class="nav-btn" id="navContacts">
+      <span class="nav-icon">📇</span>
+      <span>Contacts</span>
     </button>
   </nav>
 
@@ -2621,24 +2745,38 @@
     // =============================================================
     const navLiveFeed = document.getElementById('navLiveFeed');
     const navIdeasBoard = document.getElementById('navIdeasBoard');
+    const navContacts = document.getElementById('navContacts');
     const liveFeedPage = document.getElementById('liveFeedPage');
     const ideasBoardPage = document.getElementById('ideasBoardPage');
+    const contactsPage = document.getElementById('contactsPage');
 
-    navLiveFeed.addEventListener('click', () => {
-      navLiveFeed.classList.add('active');
-      navIdeasBoard.classList.remove('active');
-      liveFeedPage.style.display = 'block';
-      ideasBoardPage.style.display = 'none';
-      window.scrollTo(0,0);
-    });
-
-    navIdeasBoard.addEventListener('click', () => {
-      navIdeasBoard.classList.add('active');
+    function switchPage(page) {
+      // Deactivate all
       navLiveFeed.classList.remove('active');
-      ideasBoardPage.style.display = 'block';
+      navIdeasBoard.classList.remove('active');
+      navContacts.classList.remove('active');
+      
       liveFeedPage.style.display = 'none';
-      window.scrollTo(0,0);
-    });
+      ideasBoardPage.style.display = 'none';
+      contactsPage.style.display = 'none';
+
+      // Activate selected
+      if (page === 'live') {
+        navLiveFeed.classList.add('active');
+        liveFeedPage.style.display = 'block';
+      } else if (page === 'ideas') {
+        navIdeasBoard.classList.add('active');
+        ideasBoardPage.style.display = 'block';
+      } else if (page === 'contacts') {
+        navContacts.classList.add('active');
+        contactsPage.style.display = 'block';
+      }
+      window.scrollTo(0, 0);
+    }
+
+    navLiveFeed.addEventListener('click', () => switchPage('live'));
+    navIdeasBoard.addEventListener('click', () => switchPage('ideas'));
+    navContacts.addEventListener('click', () => switchPage('contacts'));
 
     // =============================================================
     // IDEAS BOARD LOGIC
@@ -2922,6 +3060,111 @@
     window.deleteIdea = function(id) {
       if (confirm('Delete this idea?')) {
         ideasRef.child(id).remove().then(() => showToast('🗑️ Idea deleted'));
+      }
+    };
+
+    // =============================================================
+    // CONTACTS LOGIC
+    // =============================================================
+    const contactsRef = db.ref('contacts');
+
+    const contactForm = document.getElementById('contactForm');
+    const contactNameInput = document.getElementById('contactNameInput');
+    const contactPhoneInput = document.getElementById('contactPhoneInput');
+    const contactsFeed = document.getElementById('contactsFeed');
+    const contactsEmpty = document.getElementById('contactsEmpty');
+
+    function sanitizePhone(phone) {
+      return phone.replace(/\D/g, '');
+    }
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = contactNameInput.value.trim();
+      const phone = contactPhoneInput.value.trim();
+      const currentName = getCurrentName() || name;
+
+      if (!name || !phone) {
+        showToast('⚠️ Enter both name and number!');
+        return;
+      }
+
+      contactsRef.push({
+        name: name,
+        phone: phone,
+        addedBy: currentName,
+        createdAt: Date.now()
+      }).then(() => {
+        contactNameInput.value = '';
+        contactPhoneInput.value = '';
+        showToast('📇 Contact added!');
+        
+        // Auto-check in if they haven't yet
+        if (!getCurrentName()) {
+          saveName(name);
+        }
+      }).catch(() => {
+        showToast('❌ Failed to add contact.');
+      });
+    });
+
+    contactsRef.on('value', (snapshot) => {
+      renderContacts(snapshot);
+    });
+
+    function renderContacts(snapshot) {
+      const contacts = [];
+      const currentName = getCurrentName();
+
+      snapshot.forEach((child) => {
+        contacts.push({ id: child.key, ...child.val() });
+      });
+
+      // Sort alphabetically by name
+      contacts.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Clear existing
+      contactsFeed.querySelectorAll('.contact-item').forEach(el => el.remove());
+
+      if (contacts.length === 0) {
+        contactsEmpty.style.display = 'block';
+        return;
+      }
+      contactsEmpty.style.display = 'none';
+
+      contacts.forEach((contact, index) => {
+        const div = document.createElement('div');
+        div.className = 'contact-item';
+        div.style.animationDelay = `${index * 60}ms`;
+
+        const cleanPhone = sanitizePhone(contact.phone);
+        const canDelete = contact.addedBy === currentName || contact.name === currentName;
+        
+        const deleteBtnHTML = canDelete
+          ? `<button class="delete-btn" onclick="deleteContact('${contact.id}')" title="Delete Contact">🗑️</button>`
+          : '';
+
+        div.innerHTML = `
+          <div class="contact-item-header">
+            <div>
+              <div class="contact-name">${escapeHTML(contact.name)}</div>
+              <div class="contact-number">${escapeHTML(contact.phone)}</div>
+            </div>
+            ${deleteBtnHTML}
+          </div>
+          <div class="contact-actions">
+            <a href="tel:${cleanPhone}" class="contact-btn contact-btn--call" title="Call">📞 Call</a>
+            <a href="sms:${cleanPhone}" class="contact-btn contact-btn--text" title="Text">💬 Text</a>
+          </div>
+        `;
+        contactsFeed.appendChild(div);
+      });
+    }
+
+    window.deleteContact = function(id) {
+      if (confirm('Remove this contact?')) {
+        contactsRef.child(id).remove().then(() => showToast('🗑️ Contact removed'));
       }
     };
 
